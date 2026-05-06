@@ -48,7 +48,13 @@ except Exception as e:
 url = "https://drive.google.com/uc?export=download&id=1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
 
 try:
-    df = pd.read_csv(url, encoding='latin1')
+    df = pd.read_csv("data.csv")   # 👈 IMPORTANT: local file
+
+    print("DF SHAPE:", df.shape)
+    print("COLUMNS:", df.columns)
+
+    if df.shape[0] == 0:
+        raise Exception("Empty dataset")
 
     # Clean data
     for col in ['so2', 'no2', 'rspm', 'spm', 'pm2_5']:
@@ -59,13 +65,11 @@ try:
     if 'date' in df.columns:
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
-    print("✓ Data loaded successfully!")
-    print(f"Dataset shape: {df.shape}")
+    print("✅ Data loaded successfully!")
 
 except Exception as e:
-    print(f"Error loading data: {e}")
+    print("❌ DATA ERROR:", e)
     df = None
-
 
 # ================= ROUTES =================
 @app.route('/')
