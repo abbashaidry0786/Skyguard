@@ -45,7 +45,7 @@ except Exception as e:
 
 # ================= LOAD DATA =================
 # Fixed Google Drive direct download link
-url = "https://drive.google.com/file/d/1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4/view?usp=sharing"
+url = "https://drive.google.com/uc?export=download&id=1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
 
 try:
     df = pd.read_csv(url, encoding='latin1')
