@@ -1,89 +1,57 @@
 from flask import Flask, render_template, request, jsonify
 import joblib
-import pickle
 import pandas as pd
 import numpy as np
-import os
+import requests
+from io import StringIO
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
-# Paths
-MODEL_PATH = 'india_air_quality_model_random_forest.pkl'
-SCALER_PATH = 'scaler.pkl'
-FEATURE_INFO_PATH = 'feature_info.pkl'
-
-# Initialize
-model = None
-scaler = None
-feature_info = None
-df = None
-
 # ================= LOAD MODEL =================
 try:
-    model = joblib.load(MODEL_PATH)
-    print("✓ Model loaded successfully!")
+    model = joblib.load("india_air_quality_model_random_forest.pkl")
+    print("✅ Model loaded")
 except Exception as e:
-    print(f"Error loading model: {e}")
+    print("❌ Model error:", e)
+    model = None
 
-try:
-    scaler = joblib.load(SCALER_PATH)
-    print("✓ Scaler loaded successfully!")
-except Exception as e:
-    print(f"Error loading scaler: {e}")
-
-try:
-    with open(FEATURE_INFO_PATH, 'rb') as f:
-        feature_info = pickle.load(f)
-    print("✓ Feature info loaded successfully!")
-except Exception as e:
-    print(f"Error loading feature info: {e}")
-    feature_info = {
-        'feature_columns': ['so2', 'no2', 'rspm', 'spm', 'year', 'month', 'state_encoded', 'type_encoded'],
-        'target_column': 'pm2_5'
-    }
-
-# ================= LOAD DATA =================
-# Fixed Google Drive direct download link
-import requests
-from io import StringIO
+# ================= LOAD DATA (OPTIMIZED) =================
+df = None
 
 try:
     file_id = "1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
     url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
     response = requests.get(url)
-    
-    if response.status_code != 200:
-        raise Exception("Failed to download file")
+    data = StringIO(response.text)
 
-    df = pd.read_csv(StringIO(response.text))
-
-    print("DF SHAPE:", df.shape)
+    # 🔥 LIMIT DATA (IMPORTANT FOR MEMORY)
+    df = pd.read_csv(
+        data,
+        usecols=['so2','no2','rspm','spm','pm2_5','date'],
+        nrows=50000
+    )
 
     # Clean data
-    for col in ['so2', 'no2', 'rspm', 'spm', 'pm2_5']:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors='coerce')
-            df[col].fillna(df[col].median(), inplace=True)
+    for col in ['so2','no2','rspm','spm','pm2_5']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+        df[col].fillna(df[col].median(), inplace=True)
 
-    if 'date' in df.columns:
-        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
 
-    print("✅ Data loaded successfully!")
+    print("✅ Data loaded:", df.shape)
 
 except Exception as e:
-    print("❌ DATA ERROR:", e)
+    print("❌ Data error:", e)
     df = None
 
 # ================= ROUTES =================
+
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 @app.route('/visualization')
 def visualization():
@@ -93,140 +61,58 @@ def visualization():
 def prediction():
     return render_template('prediction.html')
 
+# ================= PREDICTION =================
 
-# ================= PREDICTION API =================
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
-        if model is None:
-            return jsonify({'success': False, 'error': 'Model not loaded'}), 500
-
         data = request.get_json()
 
-        so2 = float(data.get('so2', 0))
-        no2 = float(data.get('no2', 0))
-        rspm = float(data.get('rspm', 0))
-        spm = float(data.get('spm', 0))
-        year = int(data.get('year', datetime.now().year))
-        month = int(data.get('month', datetime.now().month))
+        input_data = pd.DataFrame({
+            'so2': [float(data['so2'])],
+            'no2': [float(data['no2'])],
+            'rspm': [float(data['rspm'])],
+            'spm': [float(data['spm'])],
+            'year': [int(data.get('year', 2024))],
+            'month': [int(data.get('month', 1))]
+        })
 
-        input_data = {
-            'so2': [so2],
-            'no2': [no2],
-            'rspm': [rspm],
-            'spm': [spm],
-            'year': [year],
-            'month': [month]
-        }
-
-        if feature_info and 'feature_columns' in feature_info:
-            if 'state_encoded' in feature_info['feature_columns']:
-                input_data['state_encoded'] = [0]
-            if 'type_encoded' in feature_info['feature_columns']:
-                input_data['type_encoded'] = [0]
-
-        input_df = pd.DataFrame(input_data)
-
-        if feature_info:
-            cols = [c for c in feature_info['feature_columns'] if c in input_df.columns]
-            input_df = input_df[cols]
-
-        prediction = model.predict(input_df)[0]
-
-        if np.isnan(prediction) or np.isinf(prediction):
-            prediction = 50.0
-
-        aqi_category, aqi_color, health_impact = calculate_aqi_category(prediction)
+        pred = model.predict(input_data)[0]
 
         return jsonify({
-            'success': True,
-            'pm2_5_prediction': round(float(prediction), 2),
-            'aqi_category': aqi_category,
-            'aqi_color': aqi_color,
-            'health_impact': health_impact
+            "success": True,
+            "pm2_5": round(float(pred), 2)
         })
 
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
+        return jsonify({"success": False, "error": str(e)})
 
+# ================= VISUALIZATION =================
 
-# ================= AQI LOGIC =================
-def calculate_aqi_category(pm25_value):
-    try:
-        pm25_value = float(pm25_value)
-
-        if pm25_value <= 30:
-            return "Good", "#00e400", "Air quality is satisfactory"
-        elif pm25_value <= 60:
-            return "Satisfactory", "#ffff00", "Air quality is acceptable"
-        elif pm25_value <= 90:
-            return "Moderate", "#ff7e00", "Sensitive groups affected"
-        elif pm25_value <= 120:
-            return "Poor", "#ff0000", "Health risk increases"
-        elif pm25_value <= 250:
-            return "Very Poor", "#8f3f97", "Serious health effects"
-        else:
-            return "Severe", "#7e0023", "Emergency conditions"
-
-    except:
-        return "Unknown", "#999999", "Error"
-
-
-# ================= VISUALIZATION API =================
 @app.route('/api/visualization-data')
-def get_visualization_data():
+def visualization_data():
     try:
-        if df is None or len(df) == 0:
-            return jsonify({
-                'success': True,
-                'states': [],
-                'so2': [],
-                'no2': [],
-                'pm2_5': []
-            })
+        if df is None:
+            raise Exception("No data")
 
-        print("Columns:", df.columns)
+        # Year column
+        df['year'] = df['date'].dt.year
 
-        # Required columns check
-        for col in ['so2', 'no2', 'pm2_5']:
-            if col not in df.columns:
-                return jsonify({
-                    'success': False,
-                    'error': f'Missing column: {col}'
-                })
+        yearly = df.groupby('year')[['so2','no2','pm2_5']].mean().dropna()
 
-        # If state exists
-        if 'state' in df.columns:
-            data = df.groupby('state')[['so2', 'no2', 'pm2_5']].mean().round(2)
-
-            return jsonify({
-                'success': True,
-                'states': data.index.tolist()[:10],
-                'so2': data['so2'].tolist()[:10],
-                'no2': data['no2'].tolist()[:10],
-                'pm2_5': data['pm2_5'].tolist()[:10]
-            })
-
-        # Fallback (no state column)
         return jsonify({
-            'success': True,
-            'states': ['Average'],
-            'so2': [float(df['so2'].mean())],
-            'no2': [float(df['no2'].mean())],
-            'pm2_5': [float(df['pm2_5'].mean())]
+            "success": True,
+            "years": yearly.index.tolist(),
+            "so2": yearly['so2'].tolist(),
+            "no2": yearly['no2'].tolist(),
+            "pm2_5": yearly['pm2_5'].tolist()
         })
 
     except Exception as e:
-        print("Error:", str(e))
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        })
-
-    
-
+        return jsonify({"success": False, "error": str(e)})
 
 # ================= RUN =================
-if __name__ == '__main__':
-    print("\n🚀 Starting Flask Server...")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
