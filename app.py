@@ -48,7 +48,6 @@ except Exception as e:
 
 # Load sample data for visualization
 url = "https://drive.google.com/file/d/1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4/view?usp=drive_link"
-
 try:
     df = pd.read_csv(url, encoding='latin1')
 if os.path.exists(DATA_PATH):
