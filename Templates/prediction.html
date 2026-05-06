@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction -AI Based PM 2.5 Prediction System </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-wind"></i>
+                <span>Skyguard</span>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/visualization">Visualization</a></li>
+                <li><a href="/prediction" class="active">Prediction</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" data-aos="fade-down">
+        <div class="container">
+            <h1>PM2.5 Prediction</h1>
+            <p>Get AI-powered air quality predictions instantly</p>
+        </div>
+    </section>
+
+    <!-- Prediction Section -->
+    <section class="prediction-section" data-aos="fade-up">
+        <div class="container">
+            <div class="prediction-grid">
+                <!-- Input Form -->
+                <div class="prediction-form-container" data-aos="fade-right">
+                    <div class="form-header">
+                        <h2><i class="fas fa-calculator"></i> Input Parameters</h2>
+                        <p>Enter pollutant values to predict PM2.5 levels</p>
+                    </div>
+                    <form id="predictionForm" class="prediction-form">
+                        <div class="form-group">
+                            <label for="so2">
+                                <i class="fas fa-smog"></i> SO2 (Sulfur Dioxide)
+                                <span class="unit">μg/m³</span>
+                            </label>
+                            <input type="number" id="so2" name="so2" step="0.01" min="0" required placeholder="e.g., 15.5">
+                            <small>Typical range: 0-50 μg/m³</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="no2">
+                                <i class="fas fa-wind"></i> NO2 (Nitrogen Dioxide)
+                                <span class="unit">μg/m³</span>
+                            </label>
+                            <input type="number" id="no2" name="no2" step="0.01" min="0" required placeholder="e.g., 45.2">
+                            <small>Typical range: 0-80 μg/m³</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rspm">
+                                <i class="fas fa-cloud"></i> RSPM (Respirable Suspended Particulate Matter)
+                                <span class="unit">μg/m³</span>
+                            </label>
+                            <input type="number" id="rspm" name="rspm" step="0.01" min="0" required placeholder="e.g., 120.0">
+                            <small>Typical range: 0-300 μg/m³</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="spm">
+                                <i class="fas fa-industry"></i> SPM (Suspended Particulate Matter)
+                                <span class="unit">μg/m³</span>
+                            </label>
+                            <input type="number" id="spm" name="spm" step="0.01" min="0" required placeholder="e.g., 180.0">
+                            <small>Typical range: 0-500 μg/m³</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="year">
+                                    <i class="fas fa-calendar"></i> Year
+                                </label>
+                                <input type="number" id="year" name="year" min="1990" max="2030" value="2026" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="month">
+                                    <i class="fas fa-calendar-day"></i> Month
+                                </label>
+                                <select id="month" name="month" required>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4"selected>April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state">
+                                <i class="fas fa-map-marker-alt"></i> State
+                            </label>
+                            <select id="state" name="state">
+                                <option value="Agra">Agra</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">
+                                <i class="fas fa-building"></i> Area Type
+                            </label>
+                            <select id="type" name="type">
+                                <option value="Residential, Rural and other Areas">Residential/Rural</option>
+                                <option value="Industrial Area">Industrial</option>
+                                <option value="Commercial Area">Commercial</option>
+                                <option value="Sensitive Area">Sensitive</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-magic"></i> Predict PM2.5 Level
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Display -->
+                <div class="prediction-results-container" data-aos="fade-left">
+                    <div id="predictionResults" class="prediction-results hidden">
+                        <div class="results-header">
+                            <h2><i class="fas fa-chart-bar"></i> Prediction Results</h2>
+                        </div>
+
+                        <!-- Main Result Card -->
+                        <div class="result-main-card">
+                            <div class="result-value">
+                                <span class="result-label">Predicted PM2.5</span>
+                                <h1 id="pm25Value">--</h1>
+                                <span class="result-unit">μg/m³</span>
+                            </div>
+                            <div class="aqi-indicator" id="aqiIndicator">
+                                <div class="aqi-badge" id="aqiBadge">
+                                    <span id="aqiCategory">Good</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Health Impact -->
+                        <div class="health-impact-card">
+                            <h3><i class="fas fa-heartbeat"></i> Health Impact</h3>
+                            <p id="healthImpact">Air quality is satisfactory.</p>
+                        </div>
+
+                        <!-- Input Summary -->
+                        <div class="input-summary-card">
+                            <h3><i class="fas fa-info-circle"></i> Input Summary</h3>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <span class="summary-label">SO2:</span>
+                                    <span class="summary-value" id="summSo2">--</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">NO2:</span>
+                                    <span class="summary-value" id="summNo2">--</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">RSPM:</span>
+                                    <span class="summary-value" id="summRspm">--</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">SPM:</span>
+                                    <span class="summary-value" id="summSpm">--</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Date:</span>
+                                    <span class="summary-value" id="summDate">--</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Location:</span>
+                                    <span class="summary-value" id="summLocation">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visualization Chart -->
+                        <div class="result-chart-card">
+                            <h3><i class="fas fa-chart-pie"></i> Pollutant Composition</h3>
+                            <canvas id="pollutantChart"></canvas>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="result-actions">
+                            <button class="btn btn-secondary" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print Results
+                            </button>
+                            <button class="btn btn-primary" onclick="resetForm()">
+                                <i class="fas fa-redo"></i> New Prediction
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder -->
+                    <div id="resultsPlaceholder" class="results-placeholder">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>No Predictions Yet</h3>
+                        <p>Fill out the form and click "Predict PM2.5 Level" to see results here.</p>
+                    </div>
+
+                    <!-- Loading Indicator -->
+                    <div id="predictionLoading" class="prediction-loading hidden">
+                        <div class="spinner"></div>
+                        <p>Analyzing data and generating prediction...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Understanding the Parameters</h2>
+            <div class="info-grid">
+                <div class="info-card" data-aos="zoom-in" data-aos-delay="100">
+                    <i class="fas fa-smog"></i>
+                    <h3>SO2 (Sulfur Dioxide)</h3>
+                    <p>A gas produced by burning fossil fuels. High levels can harm respiratory systems.</p>
+                </div>
+                <div class="info-card" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="fas fa-wind"></i>
+                    <h3>NO2 (Nitrogen Dioxide)</h3>
+                    <p>Primarily from vehicle emissions. Can cause breathing problems and reduce immunity.</p>
+                </div>
+                <div class="info-card" data-aos="zoom-in" data-aos-delay="300">
+                    <i class="fas fa-cloud"></i>
+                    <h3>RSPM</h3>
+                    <p>Particles less than 10 microns that can penetrate deep into lungs.</p>
+                </div>
+                <div class="info-card" data-aos="zoom-in" data-aos-delay="400">
+                    <i class="fas fa-industry"></i>
+                    <h3>SPM</h3>
+                    <p>Total suspended particles in air from various sources including dust and smoke.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-wind"></i> Skyguard</h3>
+                    <p>Predicting air quality for a healthier tomorrow using advanced machine learning.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/visualization">Visualization</a></li>
+                        <li><a href="/prediction">Prediction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@skyguard.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Skyguard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/prediction.js') }}"></script>
+</body>
+</html>

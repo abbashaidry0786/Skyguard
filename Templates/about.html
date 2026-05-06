@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AI based PM 2.5 Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-wind"></i>
+                <span>Skyguard</span>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about" class="active">About</a></li>
+                <li><a href="/visualization">Visualization</a></li>
+                <li><a href="/prediction">Prediction</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" data-aos="fade-down">
+        <div class="container">
+            <h1>About This Project</h1>
+            <p>Understanding Air Quality Prediction with Machine Learning</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-content" data-aos="fade-up">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>What is This Project?</h2>
+                    <p>Skyguard is an advanced machine learning application designed to forecast PM2.5 (Particulate Matter 2.5) levels based on various environmental pollutants. This project uses historical air quality data from across India to train a Random Forest regression model.</p>
+                    <p>PM2.5 refers to tiny particles in the air that are 2.5 microns or less in diameter. These particles can penetrate deep into the lungs and even enter the bloodstream, posing serious health risks.</p>
+                </div>
+                <div class="about-image">
+                    <div class="info-box">
+                        <i class="fas fa-lungs"></i>
+                        <h3>Health Impact</h3>
+                        <p>PM2.5 monitoring helps protect public health</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Model Information -->
+    <section class="model-info" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Machine Learning Model</h2>
+            <div class="model-grid">
+                <div class="model-card" data-aos="zoom-in" data-aos-delay="100">
+                    <h3><i class="fas fa-robot"></i> Algorithm</h3>
+                    <p><strong>Random Forest Regressor</strong></p>
+                    <p>An ensemble learning method that operates by constructing multiple decision trees during training.</p>
+                </div>
+                <div class="model-card" data-aos="zoom-in" data-aos-delay="200">
+                    <h3><i class="fas fa-chart-line"></i> Performance</h3>
+                    <p><strong>R² Score: 0.5183</strong></p>
+                    <p>RMSE: 3.6039 | MAE: 0.3391</p>
+                    <p>Cross-Validation: 0.4912</p>
+                </div>
+                <div class="model-card" data-aos="zoom-in" data-aos-delay="300">
+                    <h3><i class="fas fa-layer-group"></i> Features Used</h3>
+                    <p>SO2, NO2, RSPM, SPM</p>
+                    <p>Year, Month, State, Area Type</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithm Comparison -->
+    <section class="comparison-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Algorithm Comparison</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>R² Score (Test)</th>
+                            <th>RMSE (Test)</th>
+                            <th>MAE (Test)</th>
+                            <th>Training Time (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="best-model">
+                            <td><i class="fas fa-trophy"></i> Random Forest</td>
+                            <td>0.5183</td>
+                            <td>3.6039</td>
+                            <td>0.3391</td>
+                            <td>63.35</td>
+                        </tr>
+                        <tr>
+                            <td>Decision Tree</td>
+                            <td>0.4348</td>
+                            <td>3.9038</td>
+                            <td>0.3417</td>
+                            <td>1.00</td>
+                        </tr>
+                        <tr>
+                            <td>KNN</td>
+                            <td>0.3730</td>
+                            <td>4.1116</td>
+                            <td>0.3607</td>
+                            <td>21.88</td>
+                        </tr>
+                        <tr>
+                            <td>Gradient Boosting</td>
+                            <td>0.2334</td>
+                            <td>4.5465</td>
+                            <td>0.6754</td>
+                            <td>94.30</td>
+                        </tr>
+                        <tr>
+                            <td>Linear Regression</td>
+                            <td>0.0097</td>
+                            <td>5.1673</td>
+                            <td>0.7153</td>
+                            <td>0.17</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="tech-stack" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="100">
+                    <i class="fab fa-python"></i>
+                    <h3>Python</h3>
+                    <p>Core Programming Language</p>
+                </div>
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="150">
+                    <i class="fas fa-flask"></i>
+                    <h3>Flask</h3>
+                    <p>Web Framework</p>
+                </div>
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="200">
+                    <i class="fas fa-brain"></i>
+                    <h3>Scikit-learn</h3>
+                    <p>Machine Learning</p>
+                </div>
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="250">
+                    <i class="fas fa-table"></i>
+                    <h3>Pandas</h3>
+                    <p>Data Processing</p>
+                </div>
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="300">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Chart.js</h3>
+                    <p>Data Visualization</p>
+                </div>
+                <div class="tech-card" data-aos="flip-up" data-aos-delay="350">
+                    <i class="fab fa-html5"></i>
+                    <h3>HTML/CSS/JS</h3>
+                    <p>Frontend Technologies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AQI Information -->
+    <section class="aqi-info" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Air Quality Index (AQI) Categories</h2>
+            <div class="aqi-grid">
+                <div class="aqi-card good" data-aos="fade-right" data-aos-delay="100">
+                    <h3>Good (0-30)</h3>
+                    <p>Air quality is satisfactory, and air pollution poses little or no risk.</p>
+                </div>
+                <div class="aqi-card satisfactory" data-aos="fade-right" data-aos-delay="150">
+                    <h3>Satisfactory (31-60)</h3>
+                    <p>Air quality is acceptable. However, there may be a risk for some people.</p>
+                </div>
+                <div class="aqi-card moderate" data-aos="fade-right" data-aos-delay="200">
+                    <h3>Moderate (61-90)</h3>
+                    <p>Members of sensitive groups may experience health effects.</p>
+                </div>
+                <div class="aqi-card poor" data-aos="fade-right" data-aos-delay="250">
+                    <h3>Poor (91-120)</h3>
+                    <p>The risk of health effects is increased for everyone.</p>
+                </div>
+                <div class="aqi-card very-poor" data-aos="fade-right" data-aos-delay="300">
+                    <h3>Very Poor (121-250)</h3>
+                    <p>Health warning: everyone is more likely to be affected.</p>
+                </div>
+                <div class="aqi-card severe" data-aos="fade-right" data-aos-delay="350">
+                    <h3>Severe (250+)</h3>
+                    <p>Health alert: Everyone may experience serious health effects.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-wind"></i> Skyguard</h3>
+                    <p>Predicting air quality for a healthier tomorrow using advanced machine learning.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/visualization">Visualization</a></li>
+                        <li><a href="/prediction">Prediction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@skyguard.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Skyguard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization - AI Based PM 2.5 Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-wind"></i>
+                <span>Skyguard</span>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/visualization" class="active">Visualization</a></li>
+                <li><a href="/prediction">Prediction</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header" data-aos="fade-down">
+        <div class="container">
+            <h1>Data Visualization</h1>
+            <p>Interactive Charts and Analytics for Air Quality Data</p>
+        </div>
+    </section>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading visualization data...</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <section class="viz-stats" data-aos="fade-up">
+        <div class="container">
+            <div class="viz-stats-grid">
+                <div class="viz-stat-card so2" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="viz-stat-icon">
+                        <i class="fas fa-smog"></i>
+                    </div>
+                    <div class="viz-stat-info">
+                        <h3 id="so2Mean">--</h3>
+                        <p>SO2 Average (μg/m³)</p>
+                        <span class="viz-stat-detail">Max: <span id="so2Max">--</span></span>
+                    </div>
+                </div>
+                <div class="viz-stat-card no2" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="viz-stat-icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <div class="viz-stat-info">
+                        <h3 id="no2Mean">--</h3>
+                        <p>NO2 Average (μg/m³)</p>
+                        <span class="viz-stat-detail">Max: <span id="no2Max">--</span></span>
+                    </div>
+                </div>
+                <div class="viz-stat-card pm25" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="viz-stat-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="viz-stat-info">
+                        <h3 id="pm25Mean">--</h3>
+                        <p>PM2.5 Average (μg/m³)</p>
+                        <span class="viz-stat-detail">Max: <span id="pm25Max">--</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section" data-aos="fade-up">
+        <div class="container">
+            <!-- State-wise Pollution Chart -->
+            <div class="chart-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="chart-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> Top 10 States by Pollution Levels</h2>
+                    <p>Average pollutant concentrations across Indian states</p>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="stateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Yearly Trend Chart -->
+            <div class="chart-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="chart-header">
+                    <h2><i class="fas fa-calendar-alt"></i> Yearly Pollution Trends</h2>
+                    <p>Historical trends of air pollutants over the years</p>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Monthly Pattern Chart -->
+            <div class="chart-container" data-aos="fade-up" data-aos-delay="300">
+                <div class="chart-header">
+                    <h2><i class="fas fa-chart-line"></i> Monthly Pollution Patterns</h2>
+                    <p>Average pollution levels throughout the year</p>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="monthChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Pollutant Comparison Chart -->
+            <div class="chart-container" data-aos="fade-up" data-aos-delay="400">
+                <div class="chart-header">
+                    <h2><i class="fas fa-balance-scale"></i> Pollutant Distribution Comparison</h2>
+                    <p>Statistical comparison of different pollutants</p>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insights Section -->
+    <section class="insights-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Key Insights</h2>
+            <div class="insights-grid">
+                <div class="insight-card" data-aos="flip-left" data-aos-delay="100">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Seasonal Variations</h3>
+                    <p>Air pollution levels typically increase during winter months due to lower temperatures and reduced wind speeds.</p>
+                </div>
+                <div class="insight-card" data-aos="flip-left" data-aos-delay="200">
+                    <i class="fas fa-city"></i>
+                    <h3>Urban Impact</h3>
+                    <p>Metropolitan areas show significantly higher pollution levels compared to rural regions, primarily due to vehicular emissions.</p>
+                </div>
+                <div class="insight-card" data-aos="flip-left" data-aos-delay="300">
+                    <i class="fas fa-industry"></i>
+                    <h3>Industrial Zones</h3>
+                    <p>Industrial areas exhibit elevated levels of SO2 and NO2, indicating the impact of manufacturing activities.</p>
+                </div>
+                <div class="insight-card" data-aos="flip-left" data-aos-delay="400">
+                    <i class="fas fa-arrow-trend-up"></i>
+                    <h3>Long-term Trends</h3>
+                    <p>PM2.5 levels have shown concerning upward trends in recent years, requiring urgent policy interventions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-wind"></i> Skyguard</h3>
+                    <p>Predicting air quality for a healthier tomorrow using advanced machine learning.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/visualization">Visualization</a></li>
+                        <li><a href="/prediction">Prediction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@skyguard.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Skyguard . All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+</body>
+</html>
