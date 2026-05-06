@@ -45,7 +45,7 @@ except Exception as e:
 
 # ================= LOAD DATA =================
 # Fixed Google Drive direct download link
-url = "https://drive.google.com/uc?export=download&id=1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
+url = "https://drive.google.com/file/d/1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4/view?usp=sharing"
 
 try:
     df = pd.read_csv(url, encoding='latin1')
@@ -168,20 +168,53 @@ def calculate_aqi_category(pm25_value):
 def get_visualization_data():
     try:
         if df is None or len(df) == 0:
-            return jsonify({'success': True, 'message': 'No data available'})
+            return jsonify({
+                'success': True,
+                'states': [],
+                'so2': [],
+                'no2': [],
+                'pm2_5': []
+            })
 
-        state_pollution = df.groupby('state')[['so2', 'no2', 'pm2_5']].mean().round(2)
+        print("Columns:", df.columns)
 
+        # Required columns check
+        for col in ['so2', 'no2', 'pm2_5']:
+            if col not in df.columns:
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing column: {col}'
+                })
+
+        # If state exists
+        if 'state' in df.columns:
+            data = df.groupby('state')[['so2', 'no2', 'pm2_5']].mean().round(2)
+
+            return jsonify({
+                'success': True,
+                'states': data.index.tolist()[:10],
+                'so2': data['so2'].tolist()[:10],
+                'no2': data['no2'].tolist()[:10],
+                'pm2_5': data['pm2_5'].tolist()[:10]
+            })
+
+        # Fallback (no state column)
         return jsonify({
             'success': True,
-            'states': state_pollution.index.tolist()[:10],
-            'so2': state_pollution['so2'].tolist()[:10],
-            'no2': state_pollution['no2'].tolist()[:10],
-            'pm2_5': state_pollution['pm2_5'].tolist()[:10]
+            'states': ['Average'],
+            'so2': [float(df['so2'].mean())],
+            'no2': [float(df['no2'].mean())],
+            'pm2_5': [float(df['pm2_5'].mean())]
         })
 
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+        print("Error:", str(e))
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        })
+
+    
 
 
 # ================= RUN =================
