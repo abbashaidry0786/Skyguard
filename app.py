@@ -47,7 +47,10 @@ except Exception as e:
     print("✓ Using default feature info")
 
 # Load sample data for visualization
-DATA_PATH = 'data.csv'
+url = "https://drive.google.com/file/d/1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4/view?usp=drive_link"
+
+try:
+    df = pd.read_csv(url, encoding='latin1')
 if os.path.exists(DATA_PATH):
     try:
         df = pd.read_csv(DATA_PATH, encoding='latin1')
