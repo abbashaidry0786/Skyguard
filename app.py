@@ -45,16 +45,21 @@ except Exception as e:
 
 # ================= LOAD DATA =================
 # Fixed Google Drive direct download link
-url = "https://drive.google.com/uc?export=download&id=1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
+import requests
+from io import StringIO
 
 try:
-    df = pd.read_csv("data.csv")   # 👈 IMPORTANT: local file
+    file_id = "1LMrWjjKy7U6gs0OuCGBMXAGXIJEqyDd4"
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        raise Exception("Failed to download file")
+
+    df = pd.read_csv(StringIO(response.text))
 
     print("DF SHAPE:", df.shape)
-    print("COLUMNS:", df.columns)
-
-    if df.shape[0] == 0:
-        raise Exception("Empty dataset")
 
     # Clean data
     for col in ['so2', 'no2', 'rspm', 'spm', 'pm2_5']:
