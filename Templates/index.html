@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Based PM 2.5 Prediction System - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-wind"></i>
+                <span>Skyguard</span>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/visualization">Visualization</a></li>
+                <li><a href="/prediction">Prediction</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" data-aos="fade-up">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">AI Based PM 2.5 Prediction System</h1>
+            <p class="hero-subtitle"> Forecasting Fine Particular Pollution for Health-Aware Decisions</p>
+            <div class="hero-stats">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-brain"></i>
+                    <h3>Random Forest</h3>
+                    <p>ML Algorithm</p>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>51.83%</h3>
+                    <p>R² Score</p>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-database"></i>
+                    <h3>Real-time</h3>
+                    <p>Predictions</p>
+                </div>
+            </div>
+            <div class="hero-buttons">
+                <a href="/prediction" class="btn btn-primary">Make Prediction</a>
+                <a href="/visualization" class="btn btn-secondary">View Analytics</a>
+            </div>
+        </div>
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3>AI-Powered Predictions</h3>
+                    <p>Using Random Forest algorithm with 51.83% accuracy for PM2.5 forecasting</p>
+                </div>
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Interactive Visualizations</h3>
+                    <p>Explore air quality trends with dynamic charts and graphs</p>
+                </div>
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>State-wise Analysis</h3>
+                    <p>Compare pollution levels across different Indian states</p>
+                </div>
+                <div class="feature-card" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Real-time Results</h3>
+                    <p>Get instant predictions with visual health impact indicators</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-grid">
+                <div class="step-card" data-aos="fade-right" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <h3>Input Parameters</h3>
+                    <p>Enter pollutant values like SO2, NO2, RSPM, and SPM</p>
+                </div>
+                <div class="step-card" data-aos="fade-right" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <h3>AI Processing</h3>
+                    <p>Random Forest model analyzes the data patterns</p>
+                </div>
+                <div class="step-card" data-aos="fade-right" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <h3>Get Prediction</h3>
+                    <p>Receive PM2.5 prediction with AQI category</p>
+                </div>
+                <div class="step-card" data-aos="fade-right" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <h3>Visual Results</h3>
+                    <p>View results in interactive charts and graphs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section" data-aos="fade-up">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-box" data-aos="flip-left" data-aos-delay="100">
+                    <i class="fas fa-trophy"></i>
+                    <h3>51.83%</h3>
+                    <p>Model Accuracy (R² Score)</p>
+                </div>
+                <div class="stat-box" data-aos="flip-left" data-aos-delay="200">
+                    <i class="fas fa-crosshairs"></i>
+                    <h3>3.60</h3>
+                    <p>RMSE Score</p>
+                </div>
+                <div class="stat-box" data-aos="flip-left" data-aos-delay="300">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>0.34</h3>
+                    <p>MAE Score</p>
+                </div>
+                <div class="stat-box" data-aos="flip-left" data-aos-delay="400">
+                    <i class="fas fa-database"></i>
+                    <h3>9</h3>
+                    <p>ML Algorithms Compared</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" data-aos="zoom-in">
+        <div class="container">
+            <h2>Ready to Predict Air Quality?</h2>
+            <p>Get instant PM2.5 predictions with our AI-powered system</p>
+            <a href="/prediction" class="btn btn-primary btn-lg">Start Predicting Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-wind"></i> Skyguard</h3>
+                    <p>Predicting air quality for a healthier tomorrow using advanced machine learning.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/visualization">Visualization</a></li>
+                        <li><a href="/prediction">Prediction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> info@skyguard.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Skyguard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
